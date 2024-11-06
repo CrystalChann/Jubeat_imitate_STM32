@@ -1,7 +1,7 @@
 /*
  * dy_sv17f.h
  *
- *  Created on: Nov 6, 2024
+ *  Created on: Nov 3, 2024
  *      Author: cchin
  */
 
@@ -21,6 +21,12 @@
 #define DY_DEVICE_USB    0x00
 #define DY_DEVICE_SD     0x01
 #define DY_DEVICE_FLASH  0x02
+
+typedef struct {
+    uint8_t hours;
+    uint8_t minutes;
+    uint8_t seconds;
+} TimeType;
 
 // Function
 void DY_Init(UART_HandleTypeDef *huart);

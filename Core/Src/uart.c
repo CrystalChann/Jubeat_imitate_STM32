@@ -1,7 +1,7 @@
 /*
  * uart.c
  *
- *  Created on: Nov 6, 2024
+ *  Created on: Nov 3, 2024
  *      Author: cchin
  */
 
