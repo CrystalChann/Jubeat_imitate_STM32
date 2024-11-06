@@ -21,6 +21,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "lcd.h"
+#include <stdio.h>
 
 /* USER CODE END Includes */
 
@@ -96,6 +98,9 @@ int main(void)
   MX_SPI1_Init();
   MX_UART4_Init();
   /* USER CODE BEGIN 2 */
+  LCD_INIT();
+  int selectSong = 0; // switch of changing from menu to song info
+  int songNumberCount = 1; // the no. of song that has been selected
 
   /* USER CODE END 2 */
 
@@ -106,6 +111,24 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  LCD_DrawString(23, 23, "testing");
+//	  if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_RESET) { // if K1 pressed, selected a song
+//		  selectSong = 1;
+//	  }
+//	  if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_RESET && songNumberCount != 3) { // if K2 pressed, show another song
+//		  songNumberCount += 1;
+//	  }
+//	  else if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_RESET && songNumberCount == 3) { // the total number of song limit(here use 3 for debug use)
+//		  songNumberCount = 1;
+//	  }
+//
+//	  if (selectSong == 0 ){ //haven't select a song, stay in menu
+//		  LCD_DisplayMenu(songNumberCount);
+//	  }
+//	  else if (selectSong == 1) { // K1 pressed, jump to song info and start game play
+//		  LCD_DisplaySongInfo (songNumberCount);
+//	  }
+
   }
   /* USER CODE END 3 */
 }
@@ -226,12 +249,25 @@ static void MX_UART4_Init(void)
   */
 static void MX_GPIO_Init(void)
 {
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
+
+  /*Configure GPIO pin : k2_select_next_song_Pin */
+  GPIO_InitStruct.Pin = k2_select_next_song_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(k2_select_next_song_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : k1_select_to_song_info_Pin */
+  GPIO_InitStruct.Pin = k1_select_to_song_info_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(k1_select_to_song_info_GPIO_Port, &GPIO_InitStruct);
 
 }
 

@@ -558,3 +558,26 @@ void LCD_DrawUnitHex(uint16_t usC, uint16_t usP, uint32_t value)
 {
     LCD_DrawUnitValue(usC, usP, value, "%03x");
 }
+
+void LCD_DisplayMenu(int count) {
+	char * songSelect;
+	LCD_DrawString(140, 0, "Jubeat in STM32");
+	switch (count){
+	case 1:
+		songSelect = "< song 1 >";
+		break;
+	case 2:
+		songSelect = "< song 2 >";
+		break;
+	case 3:
+		songSelect = "< song 3 >";
+		break;
+	default:
+		songSelect = "< song 1 >";
+	}
+	LCD_DrawString(140, 120, songSelect);
+}
+
+void LCD_DisplaySongInfo(int songNumber) {
+	LCD_Clear(0, 0, 239, 319, WHITE);
+}
