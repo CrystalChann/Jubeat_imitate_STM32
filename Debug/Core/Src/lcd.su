@@ -17,8 +17,3 @@
 ../Core/Src/lcd.c:437:6:LCD_DrawDot	16	static
 ../Core/Src/lcd.c:446:6:LCD_DrawEllipse	72	static
 ../Core/Src/lcd.c:494:6:LCD_Show_Chinese	40	static
-../Core/Src/lcd.c:527:6:LCD_DrawUnitValue	80	static
-../Core/Src/lcd.c:552:6:LCD_DrawUnitDec	16	static
-../Core/Src/lcd.c:557:6:LCD_DrawUnitHex	16	static
-../Core/Src/lcd.c:562:6:LCD_DisplayMenu	24	static
-../Core/Src/lcd.c:581:6:LCD_DisplaySongInfo	24	static

@@ -14,10 +14,10 @@ static uint8_t calculateChecksum(uint8_t *data, uint8_t length) {
     for (uint8_t i = 0; i < length; i++) {
         sum += data[i];
     }
-    return sum;
+    return sum & 0xFF;
 }
 
-static void sendCommand(uint8_t *cmd, uint8_t length) {
+static void send_command(uint8_t *cmd, uint8_t length) {
     uint8_t checksum = calculateChecksum(cmd + 1, length - 2);
     cmd[length - 1] = checksum;
 
@@ -64,14 +64,9 @@ void DY_NextTrack(void) {
 }
 
 void DY_PlayTrack(uint16_t track) {
-    // AA 07 02 track_high track_low checksum
-    uint8_t data[2];
-    data[0] = (track >> 8) & 0xFF;  // High byte
-    data[1] = track & 0xFF;         // Low byte
-
     // 0xAA + 0x07 + 0x02 + track_high + track_low
-    uint8_t checksum = 0xAA + 0x07 + 0x02 + data[0] + data[1];
-	uint8_t cmd[] = {DY_START_BYTE, 0x07, 0x02, data[0], data[1], checksum};
+    uint8_t checksum = 0xAA + 0x07 + 0x02 + 0x00 + track;
+	uint8_t cmd[] = {DY_START_BYTE, 0x07, 0x02, 0x00, track, checksum};
 	send_command(cmd, sizeof(cmd));
 }
 
@@ -172,7 +167,7 @@ void DY_EQSetting(uint8_t EQMode) {
 	send_command(cmd, sizeof(cmd));
 }
 
-void DY_GetCurrentTrackLength(void) {
+TimeType DY_GetCurrentTrackLength(void) {
 	TimeType time;
 	uint8_t cmd[] = {DY_START_BYTE, 0x24, 0x00, 0xCE};
 	send_command(cmd, sizeof(cmd));
@@ -187,7 +182,7 @@ void DY_GetCurrentTrackLength(void) {
     return time;
 }
 
-void DY_UpdatePlayTime(void) {
+TimeType DY_UpdatePlayTime(void) {
 	TimeType time;
 	uint8_t cmd[] = {DY_START_BYTE, 0x24, 0x00, 0xCE};
 	send_command(cmd, sizeof(cmd));

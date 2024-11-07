@@ -99,8 +99,6 @@ int main(void)
   MX_UART4_Init();
   /* USER CODE BEGIN 2 */
   LCD_INIT();
-  int selectSong = 0; // switch of changing from menu to song info
-  int songNumberCount = 1; // the no. of song that has been selected
 
   /* USER CODE END 2 */
 
@@ -111,23 +109,34 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  LCD_DrawString(23, 23, "testing");
-//	  if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_RESET) { // if K1 pressed, selected a song
-//		  selectSong = 1;
-//	  }
-//	  if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_RESET && songNumberCount != 3) { // if K2 pressed, show another song
-//		  songNumberCount += 1;
-//	  }
-//	  else if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_RESET && songNumberCount == 3) { // the total number of song limit(here use 3 for debug use)
-//		  songNumberCount = 1;
-//	  }
-//
-//	  if (selectSong == 0 ){ //haven't select a song, stay in menu
-//		  LCD_DisplayMenu(songNumberCount);
-//	  }
-//	  else if (selectSong == 1) { // K1 pressed, jump to song info and start game play
-//		  LCD_DisplaySongInfo (songNumberCount);
-//	  }
+	  LCD_DrawString(10,25,"Welcome back to ");
+	  LCD_DrawString(90,50,"Jubeat!");
+	  LCD_DrawString(10,90,"1.Blank Space - Taylor Swift");
+	  LCD_DrawString(10,120,"2.");
+	  LCD_DrawString(10,150,"3.");
+	  LCD_DrawString(10,180,"4.");
+
+
+	  if (HAL_GPIO_ReadPin(GPIOC,GPIO_PIN_6)!=GPIO_PIN_SET){
+	  	  LCD_INIT();
+	  	  LCD_DrawString(60,50,"Blank Space");
+	  	  LCD_DrawString(100,80,"--Taylor Swift ");
+	  	  LCD_DrawString(20,110,"Difficulty: Easy");
+	  	  LCD_DrawString(20,130,"Best score: 0000");
+	  	  LCD_DrawString(100,170,"Play");
+	  	  LCD_DrawString(200,200," ");
+	  	  break;
+	    }
+
+	  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, GPIO_PIN_RESET);//blue
+	  HAL_Delay(1240);
+	  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, GPIO_PIN_SET);
+	  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_6, GPIO_PIN_RESET);//green
+	  HAL_Delay(1240);
+	  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_6, GPIO_PIN_SET);
+	  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, GPIO_PIN_RESET); //red
+	  HAL_Delay(1240);
+	  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, GPIO_PIN_SET);
 
   }
   /* USER CODE END 3 */
@@ -252,22 +261,36 @@ static void MX_GPIO_Init(void)
   GPIO_InitTypeDef GPIO_InitStruct = {0};
 
   /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
-  __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
-  /*Configure GPIO pin : k2_select_next_song_Pin */
-  GPIO_InitStruct.Pin = k2_select_next_song_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(k2_select_next_song_GPIO_Port, &GPIO_InitStruct);
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOE, red_Pin|green_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : k1_select_to_song_info_Pin */
-  GPIO_InitStruct.Pin = k1_select_to_song_info_Pin;
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(blue_GPIO_Port, blue_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pins : red_Pin green_Pin */
+  GPIO_InitStruct.Pin = red_Pin|green_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PC6 */
+  GPIO_InitStruct.Pin = GPIO_PIN_6;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(k1_select_to_song_info_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : blue_Pin */
+  GPIO_InitStruct.Pin = blue_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+  HAL_GPIO_Init(blue_GPIO_Port, &GPIO_InitStruct);
 
 }
 

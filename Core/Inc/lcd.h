@@ -66,9 +66,5 @@ void            LCD_DrawChar		( uint16_t usC, uint16_t usP, const char cChar);
 void            LCD_DrawString		( uint16_t usC, uint16_t usP, const char * pStr);
 void            LCD_DrawDot		( uint16_t usC, uint16_t usP, uint16_t usColor );
 void 		LCD_DrawEllipse		( uint16_t usC, uint16_t usP, uint16_t SR, uint16_t LR, uint16_t usColor);
-void 		LCD_DrawUnitDec		( uint16_t usC, uint16_t usP, uint32_t value );
-void 		LCD_DrawUnitHex		( uint16_t usC, uint16_t usP, uint32_t value );
-void 		LCD_DisplayMenu		( int count );
-void		LCD_DisplaySongInfo ( int songNumber);
 #endif 
 

@@ -51,8 +51,8 @@ void DY_SetVolume(uint8_t volume); //13
 void DY_VolumePlus(void); //14
 void DY_VolumeMinus(void); //15
 void DY_EQSetting(uint8_t EQMode); //1A
-void DY_GetCurrentTrackLength(void); //24
-void DY_UpdatePlayTime(void); //25
+TimeType DY_GetCurrentTrackLength(void); //24
+TimeType DY_UpdatePlayTime(void); //25
 void DY_ClosePlayTime(void); //26
 
 

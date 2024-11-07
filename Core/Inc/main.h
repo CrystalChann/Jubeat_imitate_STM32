@@ -57,10 +57,12 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define k2_select_next_song_Pin GPIO_PIN_13
-#define k2_select_next_song_GPIO_Port GPIOC
-#define k1_select_to_song_info_Pin GPIO_PIN_0
-#define k1_select_to_song_info_GPIO_Port GPIOA
+#define red_Pin GPIO_PIN_5
+#define red_GPIO_Port GPIOE
+#define green_Pin GPIO_PIN_6
+#define green_GPIO_Port GPIOE
+#define blue_Pin GPIO_PIN_12
+#define blue_GPIO_Port GPIOC
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
