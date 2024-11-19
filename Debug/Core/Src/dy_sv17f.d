@@ -23,6 +23,7 @@ Core/Src/dy_sv17f.o: ../Core/Src/dy_sv17f.c ../Core/Inc/dy_sv17f.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_sram.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_fsmc.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h \
+ ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
 ../Core/Inc/dy_sv17f.h:
 ../Core/Inc/uart.h:
@@ -50,4 +51,5 @@ Core/Src/dy_sv17f.o: ../Core/Src/dy_sv17f.c ../Core/Inc/dy_sv17f.h \
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_sram.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_fsmc.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:
