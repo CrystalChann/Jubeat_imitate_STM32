@@ -34,34 +34,34 @@ $(wildcard ../makefile.init) \
 $(wildcard ../makefile.targets) \
 
 
-BUILD_ARTIFACT_NAME := LAB 3
+BUILD_ARTIFACT_NAME := ELEC3300_project_jubeat_imitate
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX :=
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ARTIFACT_EXTENSION),.$(BUILD_ARTIFACT_EXTENSION),)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-LAB\ 3.elf \
+ELEC3300_project_jubeat_imitate.elf \
 
 MAP_FILES += \
-LAB\ 3.map \
+ELEC3300_project_jubeat_imitate.map \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-LAB\ 3.list \
+ELEC3300_project_jubeat_imitate.list \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: LAB\ 3.elf secondary-outputs
+main-build: ELEC3300_project_jubeat_imitate.elf secondary-outputs
 
 # Tool invocations
-LAB\ 3.elf LAB\ 3.map: $(OBJS) $(USER_OBJS) C:\Users\10741\STM32CubeIDE\workspace_1.9.0\LAB\ 3\STM32F103VETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "LAB 3.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"C:\Users\10741\STM32CubeIDE\workspace_1.9.0\LAB 3\STM32F103VETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="LAB 3.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+ELEC3300_project_jubeat_imitate.elf ELEC3300_project_jubeat_imitate.map: $(OBJS) $(USER_OBJS) C:\Users\cchin\STM32CubeIDE\workspace_1.9.0\ELEC3300_project_jubeat_imitate\STM32F103VETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "ELEC3300_project_jubeat_imitate.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"C:\Users\cchin\STM32CubeIDE\workspace_1.9.0\ELEC3300_project_jubeat_imitate\STM32F103VETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="ELEC3300_project_jubeat_imitate.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -70,14 +70,14 @@ default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-LAB\ 3.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "LAB 3.list"
+ELEC3300_project_jubeat_imitate.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "ELEC3300_project_jubeat_imitate.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) LAB\ 3.elf LAB\ 3.list LAB\ 3.map LAB\\ 3.elf default.size.stdout
+	-$(RM) ELEC3300_project_jubeat_imitate.elf ELEC3300_project_jubeat_imitate.list ELEC3300_project_jubeat_imitate.map default.size.stdout
 	-@echo ' '
 
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)

@@ -23,6 +23,10 @@
 /* USER CODE BEGIN Includes */
 #include "lcd.h"
 #include "dy_sv17f.h"
+
+#include "menu.h"
+#include "blank_space.h"
+#include "second_song.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -96,7 +100,8 @@ int main(void)
   LCD_INIT();
   HAL_UART_Init(&huart1);
   DY_Init(&huart1);
-  int score = 0;
+  int page = 0;
+  int menuTrue = 1;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -106,37 +111,40 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  LCD_DrawString(10,25,"Welcome back to ");
-	  LCD_DrawString(90,50,"Jubeat!");
-	  LCD_DrawString(10,90,"1.Blank Space - Taylor Swift");
-	  LCD_DrawString(10,120,"2.");
-	  LCD_DrawString(10,150,"3.");
-	  LCD_DrawString(10,180,"4.");
-
-	  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, GPIO_PIN_RESET);//blue
-	  HAL_Delay(500);
-	  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, GPIO_PIN_SET);
-	  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_6, GPIO_PIN_RESET);//green
-	  HAL_Delay(500);
-	  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_6, GPIO_PIN_SET);
-	  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, GPIO_PIN_RESET); //red
-	  HAL_Delay(500);
-	  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, GPIO_PIN_SET);
-
-	  if (HAL_GPIO_ReadPin(GPIOC,GPIO_PIN_6)!=GPIO_PIN_SET){
-		  LCD_INIT();
-		  LCD_DrawString(60,50,"Blank Space");
-		  LCD_DrawString(100,80,"--Taylor Swift ");
-		  LCD_DrawString(20,110,"Difficulty: Easy");
-		  LCD_DrawString(20,130,"Best score: 0000");
-		  LCD_DrawString(100,170,"Play");
-		  LCD_DrawString(200,200," ");
-		  DY_Play();
-
-		  break;
+	  // initialize to the menu
+	  if (menuTrue == 1) {
+		  printMenu(page);
 	  }
 
+	  // changing to another page by KEY1
+	  if(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13) != GPIO_PIN_SET) {
+		  page += 1; // select another songs
+		  if( page > 2) {
+			  page = page % 3;
+			  page = (page == 0) ? 1 : page;
+		  }
+		  // in this case assume 2 songs first
+		  // default page = 0 menu, or if A0 is pressed , go to blank space
+		  // page = 1 blank space
+		  // page = 2 second song
+		  // page = 3 third song
+	  }
 
+	  // select the song by KEY1 in STM32
+	  if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) != GPIO_PIN_SET) {
+		  menuTrue = 0;
+		  switch (page) {
+		  	  case (0) :
+					blank_space_LCD();
+		  	  	  	break;
+		  	  case (1) :
+					blank_space_LCD();
+		  	  	  	break;
+		  	  case (2) :
+					second_song_LCD();
+		  	  	  	break;
+		  }
+	  }
 
   }
 
@@ -227,27 +235,39 @@ static void MX_GPIO_Init(void)
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOC_CLK_ENABLE();
-  __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOE, red_Pin|green_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOE, red1_Pin|green1_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(blue_GPIO_Port, blue_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(blue1_GPIO_Port, blue1_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : red_Pin green_Pin PE1 */
-  GPIO_InitStruct.Pin = red_Pin|green_Pin|GPIO_PIN_1;
+  /*Configure GPIO pins : red1_Pin green1_Pin PE1 */
+  GPIO_InitStruct.Pin = red1_Pin|green1_Pin|GPIO_PIN_1;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : testing2_Pin key1_Pin */
+  GPIO_InitStruct.Pin = testing2_Pin|key1_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : testing_key_Pin */
+  GPIO_InitStruct.Pin = testing_key_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(testing_key_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : PD12 */
   GPIO_InitStruct.Pin = GPIO_PIN_12;
@@ -256,18 +276,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : key1_Pin */
-  GPIO_InitStruct.Pin = key1_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(key1_GPIO_Port, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : blue_Pin */
-  GPIO_InitStruct.Pin = blue_Pin;
+  /*Configure GPIO pin : blue1_Pin */
+  GPIO_InitStruct.Pin = blue1_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-  HAL_GPIO_Init(blue_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(blue1_GPIO_Port, &GPIO_InitStruct);
 
 }
 

@@ -1,0 +1,2 @@
+../Core/Src/second_song.c:13:6:second_song_LCD	16	static
+../Core/Src/second_song.c:24:6:second_song_musicMap	8	static
