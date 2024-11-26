@@ -117,7 +117,7 @@ int main(void)
 	  }
 
 	  // changing to another page by KEY1
-	  if(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13) != GPIO_PIN_SET) {
+	  if(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13) == GPIO_PIN_SET) {
 		  page += 1; // select another songs
 		  if( page > 2) {
 			  page = page % 3;
@@ -131,7 +131,7 @@ int main(void)
 	  }
 
 	  // select the song by KEY1 in STM32
-	  if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) != GPIO_PIN_SET) {
+	  if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_SET) {
 		  menuTrue = 0;
 		  switch (page) {
 		  	  case (0) :

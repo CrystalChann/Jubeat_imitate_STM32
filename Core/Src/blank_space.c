@@ -17,10 +17,12 @@ void blank_space_LCD(void) {
 		  LCD_DrawString(20,130,"Score: 0000");
 		  LCD_DrawString(100,170,"Playing");
 		  LCD_DrawString(200,200," ");
+
+		  DY_Play();
 }
 
 void blank_space_musicMap(void) {
-	DY_PlayTrack(0x01);
+	DY_Play();
 
 
 }
