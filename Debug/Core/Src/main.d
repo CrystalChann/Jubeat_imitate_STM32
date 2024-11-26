@@ -26,7 +26,7 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h \
  ../Core/Inc/lcd.h ../Core/Inc/dy_sv17f.h ../Core/Inc/uart.h \
  ../Core/Inc/menu.h ../Core/Inc/lcd.h ../Core/Inc/blank_space.h \
- ../Core/Inc/second_song.h
+ ../Core/Inc/an_apple.h
 ../Core/Inc/main.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:
 ../Core/Inc/stm32f1xx_hal_conf.h:
@@ -59,4 +59,4 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Core/Inc/menu.h:
 ../Core/Inc/lcd.h:
 ../Core/Inc/blank_space.h:
-../Core/Inc/second_song.h:
+../Core/Inc/an_apple.h:

@@ -57,6 +57,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define T1_PRE 7199
+#define T1_CNT 4999
 #define red1_Pin GPIO_PIN_5
 #define red1_GPIO_Port GPIOE
 #define green1_Pin GPIO_PIN_6
@@ -66,7 +68,7 @@ void Error_Handler(void);
 #define testing_key_Pin GPIO_PIN_0
 #define testing_key_GPIO_Port GPIOA
 #define key1_Pin GPIO_PIN_6
-#define key1_GPIO_Port GPIOC
+#define key1_GPIO_Port GPIOA
 #define blue1_Pin GPIO_PIN_12
 #define blue1_GPIO_Port GPIOC
 /* USER CODE BEGIN Private defines */

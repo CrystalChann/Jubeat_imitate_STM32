@@ -26,7 +26,7 @@
 
 #include "menu.h"
 #include "blank_space.h"
-#include "second_song.h"
+#include "an_apple.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -116,33 +116,46 @@ int main(void)
 		  printMenu(page);
 	  }
 
+
 	  // changing to another page by KEY1
 	  if(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13) == GPIO_PIN_SET) {
 		  page += 1; // select another songs
-		  if( page > 2) {
-			  page = page % 3;
+		  if( page > 3) {
+			  page = page % 4;
 			  page = (page == 0) ? 1 : page;
 		  }
 		  // in this case assume 2 songs first
 		  // default page = 0 menu, or if A0 is pressed , go to blank space
 		  // page = 1 blank space
-		  // page = 2 second song
-		  // page = 3 third song
+		  // page = 2 an apple
+		  // page = 3 badroom star
 	  }
+
+
 
 	  // select the song by KEY1 in STM32
 	  if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_SET) {
 		  menuTrue = 0;
+		  uint8_t cmdPlay1[] = {0xAA, 0x08, 0x0B, 0x02, 0x2F, 0x30, 0x30, 0x30, 0x30, 0x31, 0x2A, 0x4D, 0x50, 0x33, 0xD9};
+		  uint8_t cmdPlay2[] = {0xAA, 0x08, 0x0B, 0x02, 0x2F, 0x30, 0x30, 0x30, 0x30, 0x32, 0x2A, 0x4D, 0x50, 0x33, 0xDA};
+		  HAL_Delay(50);
 		  switch (page) {
 		  	  case (0) :
-					blank_space_LCD();
+		  	  	  	HAL_UART_Transmit(&huart1, cmdPlay1, sizeof(cmdPlay1), 100);
+		  	  	  	HAL_Delay(50);
+		  	  	  	blank_space_LCD();
 		  	  	  	break;
 		  	  case (1) :
-					blank_space_LCD();
+		  	  	  	HAL_UART_Transmit(&huart1, cmdPlay1, sizeof(cmdPlay1), 100);
+		  	  	  	HAL_Delay(50);
+		  	  	  	blank_space_LCD();
 		  	  	  	break;
 		  	  case (2) :
-					second_song_LCD();
+					HAL_UART_Transmit(&huart1, cmdPlay2, sizeof(cmdPlay2), 100);
+		  	  	  	HAL_Delay(50);
+					an_apple_LCD();
 		  	  	  	break;
+
 		  }
 	  }
 
@@ -257,17 +270,17 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : testing2_Pin key1_Pin */
-  GPIO_InitStruct.Pin = testing2_Pin|key1_Pin;
+  /*Configure GPIO pin : testing2_Pin */
+  GPIO_InitStruct.Pin = testing2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+  HAL_GPIO_Init(testing2_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : testing_key_Pin */
-  GPIO_InitStruct.Pin = testing_key_Pin;
+  /*Configure GPIO pins : testing_key_Pin key1_Pin */
+  GPIO_InitStruct.Pin = testing_key_Pin|key1_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(testing_key_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pin : PD12 */
   GPIO_InitStruct.Pin = GPIO_PIN_12;

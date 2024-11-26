@@ -1,6 +1,5 @@
-Core/Src/second_song.o: ../Core/Src/second_song.c \
- ../Core/Inc/blank_space.h ../Core/Inc/lcd.h \
- ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h \
+Core/Src/an_apple.o: ../Core/Src/an_apple.c ../Core/Inc/blank_space.h \
+ ../Core/Inc/lcd.h ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h \
  ../Core/Inc/stm32f1xx_hal_conf.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h \

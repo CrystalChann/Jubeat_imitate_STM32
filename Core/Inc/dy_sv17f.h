@@ -36,7 +36,7 @@ void DY_Pause(void); //03
 void DY_Stop(void); //04
 void DY_PrevTrack(void); //05
 void DY_NextTrack(void); //06
-void DY_PlayTrack(uint16_t track); //07
+void DY_PlayTrack(uint8_t track); //07
 // play specific song with path 08
 uint8_t DY_GetCurrentDevice (void); //0A
 void DY_SelectDevice(uint8_t device); //0B
@@ -54,6 +54,12 @@ void DY_EQSetting(uint8_t EQMode); //1A
 TimeType DY_GetCurrentTrackLength(void); //24
 TimeType DY_UpdatePlayTime(void); //25
 void DY_ClosePlayTime(void); //26
+
+//tester
+void DY_PlayBlankSpace(void);
+void DY_volumeTo14(void);
+void DY_PlaySecond(void);
+
 
 
 #endif /* INC_DY_SV17F_H_ */
