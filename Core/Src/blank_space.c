@@ -10,7 +10,7 @@
 #include "lcd.h"
 
 void blank_space_LCD(void) {
-			LCD_Clear(0, 0, 240, 320, WHITE);
+		  LCD_Clear(0, 0, 240, 320, WHITE);
 		  LCD_DrawString(60,50,"Blank Space");
 		  LCD_DrawString(100,80,"--Taylor Swift ");
 		  LCD_DrawString(20,110,"Difficulty: Easy");
@@ -19,10 +19,9 @@ void blank_space_LCD(void) {
 		  LCD_DrawString(200,200," ");
 
 
+
 }
 
 void blank_space_musicMap(void) {
-	DY_Play();
-
 
 }

@@ -58,7 +58,7 @@ void DY_ClosePlayTime(void); //26
 //tester
 void DY_PlayBlankSpace(void);
 void DY_volumeTo14(void);
-void DY_PlaySecond(void);
+void DY_PlayAnApple(void);
 
 
 

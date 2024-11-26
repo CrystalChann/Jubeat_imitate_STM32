@@ -26,4 +26,4 @@
 ../Core/Src/dy_sv17f.c:202:6:DY_ClosePlayTime	16	static
 ../Core/Src/dy_sv17f.c:207:6:DY_PlayBlankSpace	32	static
 ../Core/Src/dy_sv17f.c:212:6:DY_volumeTo14	16	static
-../Core/Src/dy_sv17f.c:217:6:DY_PlaySecond	32	static
+../Core/Src/dy_sv17f.c:217:6:DY_PlayAnApple	32	static

@@ -21,7 +21,7 @@ static void send_command(uint8_t *cmd, uint8_t length) {
     uint8_t checksum = calculateChecksum(cmd + 1, length - 2);
     cmd[length - 1] = checksum;
 
-    HAL_UART_Transmit(DYuart, cmd, length, HAL_MAX_DELAY);
+    HAL_UART_Transmit(DYuart, cmd, length, 1000);
 }
 
 void DY_Init(UART_HandleTypeDef *huart) {
@@ -214,7 +214,7 @@ void DY_volumeTo14(void) {
 	send_command(cmd, sizeof(cmd));
 }
 
-void DY_PlaySecond(void) {
+void DY_PlayAnApple(void) {
 	uint8_t cmd[] = {0xAA, 0x08, 0x0B, 0x02, 0x2F, 0x30, 0x30, 0x30, 0x30, 0x32, 0x2A, 0x4D, 0x50, 0x33, 0xDA};
 	send_command(cmd, sizeof(cmd));
 }

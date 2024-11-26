@@ -102,6 +102,9 @@ int main(void)
   DY_Init(&huart1);
   int page = 0;
   int menuTrue = 1;
+  uint8_t cmdPlay1[] = {0xAA, 0x08, 0x0B, 0x02, 0x2F, 0x30, 0x30, 0x30, 0x30, 0x31, 0x2A, 0x4D, 0x50, 0x33, 0xD9};
+  uint8_t cmdPlay2[] = {0xAA, 0x08, 0x0B, 0x02, 0x2F, 0x30, 0x30, 0x30, 0x30, 0x32, 0x2A, 0x4D, 0x50, 0x33, 0xDA};
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -111,11 +114,11 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
 	  // initialize to the menu
 	  if (menuTrue == 1) {
 		  printMenu(page);
 	  }
-
 
 	  // changing to another page by KEY1
 	  if(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13) == GPIO_PIN_SET) {
@@ -132,26 +135,23 @@ int main(void)
 	  }
 
 
-
 	  // select the song by KEY1 in STM32
 	  if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_SET) {
 		  menuTrue = 0;
-		  uint8_t cmdPlay1[] = {0xAA, 0x08, 0x0B, 0x02, 0x2F, 0x30, 0x30, 0x30, 0x30, 0x31, 0x2A, 0x4D, 0x50, 0x33, 0xD9};
-		  uint8_t cmdPlay2[] = {0xAA, 0x08, 0x0B, 0x02, 0x2F, 0x30, 0x30, 0x30, 0x30, 0x32, 0x2A, 0x4D, 0x50, 0x33, 0xDA};
 		  HAL_Delay(50);
 		  switch (page) {
 		  	  case (0) :
-		  	  	  	HAL_UART_Transmit(&huart1, cmdPlay1, sizeof(cmdPlay1), 100);
+		  	  	  	HAL_UART_Transmit(&huart1, cmdPlay1, sizeof(cmdPlay1), 1000);
 		  	  	  	HAL_Delay(50);
 		  	  	  	blank_space_LCD();
 		  	  	  	break;
 		  	  case (1) :
-		  	  	  	HAL_UART_Transmit(&huart1, cmdPlay1, sizeof(cmdPlay1), 100);
+		  	  	  	HAL_UART_Transmit(&huart1, cmdPlay1, sizeof(cmdPlay1), 1000);
 		  	  	  	HAL_Delay(50);
 		  	  	  	blank_space_LCD();
 		  	  	  	break;
 		  	  case (2) :
-					HAL_UART_Transmit(&huart1, cmdPlay2, sizeof(cmdPlay2), 100);
+					HAL_UART_Transmit(&huart1, cmdPlay2, sizeof(cmdPlay2), 1000);
 		  	  	  	HAL_Delay(50);
 					an_apple_LCD();
 		  	  	  	break;

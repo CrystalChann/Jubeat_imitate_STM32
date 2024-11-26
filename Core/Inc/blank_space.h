@@ -7,6 +7,8 @@
 
 #ifndef INC_BLANK_SPACE_H_
 #define INC_BLANK_SPACE_H_
+#define INTERVAL 500
+#define INTERVAL2 1000
 
 #include "lcd.h"
 
