@@ -22,8 +22,11 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "lcd.h"
-#include <stdio.h>
+#include "dy_sv17f.h"
 
+#include "menu.h"
+#include "blank_space.h"
+#include "an_apple.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -41,9 +44,7 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
- SPI_HandleTypeDef hspi1;
-
-UART_HandleTypeDef huart4;
+ UART_HandleTypeDef huart1;
 
 SRAM_HandleTypeDef hsram1;
 
@@ -55,8 +56,7 @@ SRAM_HandleTypeDef hsram1;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_FSMC_Init(void);
-static void MX_SPI1_Init(void);
-static void MX_UART4_Init(void);
+static void MX_USART1_UART_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -95,10 +95,15 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_FSMC_Init();
-  MX_SPI1_Init();
-  MX_UART4_Init();
+  MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
   LCD_INIT();
+  HAL_UART_Init(&huart1);
+  DY_Init(&huart1);
+  int page = 0;
+  int menuTrue = 1;
+  uint8_t cmdPlay1[] = {0xAA, 0x08, 0x0B, 0x02, 0x2F, 0x30, 0x30, 0x30, 0x30, 0x31, 0x2A, 0x4D, 0x50, 0x33, 0xD9};
+  uint8_t cmdPlay2[] = {0xAA, 0x08, 0x0B, 0x02, 0x2F, 0x30, 0x30, 0x30, 0x30, 0x32, 0x2A, 0x4D, 0x50, 0x33, 0xDA};
 
   /* USER CODE END 2 */
 
@@ -109,36 +114,53 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  LCD_DrawString(10,25,"Welcome back to ");
-	  LCD_DrawString(90,50,"Jubeat!");
-	  LCD_DrawString(10,90,"1.Blank Space - Taylor Swift");
-	  LCD_DrawString(10,120,"2.");
-	  LCD_DrawString(10,150,"3.");
-	  LCD_DrawString(10,180,"4.");
+
+	  // initialize to the menu
+	  if (menuTrue == 1) {
+		  printMenu(page);
+	  }
+
+	  // changing to another page by KEY1
+	  if(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13) == GPIO_PIN_SET) {
+		  page += 1; // select another songs
+		  if( page > 3) {
+			  page = page % 4;
+			  page = (page == 0) ? 1 : page;
+		  }
+		  // in this case assume 2 songs first
+		  // default page = 0 menu, or if A0 is pressed , go to blank space
+		  // page = 1 blank space
+		  // page = 2 an apple
+		  // page = 3 badroom star
+	  }
 
 
-	  if (HAL_GPIO_ReadPin(GPIOC,GPIO_PIN_6)!=GPIO_PIN_SET){
-	  	  LCD_INIT();
-	  	  LCD_DrawString(60,50,"Blank Space");
-	  	  LCD_DrawString(100,80,"--Taylor Swift ");
-	  	  LCD_DrawString(20,110,"Difficulty: Easy");
-	  	  LCD_DrawString(20,130,"Best score: 0000");
-	  	  LCD_DrawString(100,170,"Play");
-	  	  LCD_DrawString(200,200," ");
-	  	  break;
-	    }
+	  // select the song by KEY1 in STM32
+	  if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_SET) {
+		  menuTrue = 0;
+		  HAL_Delay(50);
+		  switch (page) {
+		  	  case (0) :
+		  	  	  	HAL_UART_Transmit(&huart1, cmdPlay1, sizeof(cmdPlay1), 1000);
+		  	  	  	HAL_Delay(50);
+		  	  	  	blank_space_LCD();
+		  	  	  	break;
+		  	  case (1) :
+		  	  	  	HAL_UART_Transmit(&huart1, cmdPlay1, sizeof(cmdPlay1), 1000);
+		  	  	  	HAL_Delay(50);
+		  	  	  	blank_space_LCD();
+		  	  	  	break;
+		  	  case (2) :
+					HAL_UART_Transmit(&huart1, cmdPlay2, sizeof(cmdPlay2), 1000);
+		  	  	  	HAL_Delay(50);
+					an_apple_LCD();
+		  	  	  	break;
 
-	  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, GPIO_PIN_RESET);//blue
-	  HAL_Delay(1240);
-	  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, GPIO_PIN_SET);
-	  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_6, GPIO_PIN_RESET);//green
-	  HAL_Delay(1240);
-	  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_6, GPIO_PIN_SET);
-	  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, GPIO_PIN_RESET); //red
-	  HAL_Delay(1240);
-	  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, GPIO_PIN_SET);
+		  }
+	  }
 
   }
+
   /* USER CODE END 3 */
 }
 
@@ -182,72 +204,35 @@ void SystemClock_Config(void)
 }
 
 /**
-  * @brief SPI1 Initialization Function
+  * @brief USART1 Initialization Function
   * @param None
   * @retval None
   */
-static void MX_SPI1_Init(void)
+static void MX_USART1_UART_Init(void)
 {
 
-  /* USER CODE BEGIN SPI1_Init 0 */
+  /* USER CODE BEGIN USART1_Init 0 */
 
-  /* USER CODE END SPI1_Init 0 */
+  /* USER CODE END USART1_Init 0 */
 
-  /* USER CODE BEGIN SPI1_Init 1 */
+  /* USER CODE BEGIN USART1_Init 1 */
 
-  /* USER CODE END SPI1_Init 1 */
-  /* SPI1 parameter configuration*/
-  hspi1.Instance = SPI1;
-  hspi1.Init.Mode = SPI_MODE_SLAVE;
-  hspi1.Init.Direction = SPI_DIRECTION_2LINES;
-  hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
-  hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
-  hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
-  hspi1.Init.NSS = SPI_NSS_SOFT;
-  hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
-  hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
-  hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-  hspi1.Init.CRCPolynomial = 10;
-  if (HAL_SPI_Init(&hspi1) != HAL_OK)
+  /* USER CODE END USART1_Init 1 */
+  huart1.Instance = USART1;
+  huart1.Init.BaudRate = 9600;
+  huart1.Init.WordLength = UART_WORDLENGTH_8B;
+  huart1.Init.StopBits = UART_STOPBITS_1;
+  huart1.Init.Parity = UART_PARITY_NONE;
+  huart1.Init.Mode = UART_MODE_TX_RX;
+  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart1) != HAL_OK)
   {
     Error_Handler();
   }
-  /* USER CODE BEGIN SPI1_Init 2 */
+  /* USER CODE BEGIN USART1_Init 2 */
 
-  /* USER CODE END SPI1_Init 2 */
-
-}
-
-/**
-  * @brief UART4 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_UART4_Init(void)
-{
-
-  /* USER CODE BEGIN UART4_Init 0 */
-
-  /* USER CODE END UART4_Init 0 */
-
-  /* USER CODE BEGIN UART4_Init 1 */
-
-  /* USER CODE END UART4_Init 1 */
-  huart4.Instance = UART4;
-  huart4.Init.BaudRate = 9600;
-  huart4.Init.WordLength = UART_WORDLENGTH_8B;
-  huart4.Init.StopBits = UART_STOPBITS_1;
-  huart4.Init.Parity = UART_PARITY_NONE;
-  huart4.Init.Mode = UART_MODE_TX_RX;
-  huart4.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart4.Init.OverSampling = UART_OVERSAMPLING_16;
-  if (HAL_UART_Init(&huart4) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN UART4_Init 2 */
-
-  /* USER CODE END UART4_Init 2 */
+  /* USER CODE END USART1_Init 2 */
 
 }
 
@@ -267,30 +252,49 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOE, red_Pin|green_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOE, red1_Pin|green1_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(blue_GPIO_Port, blue_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : red_Pin green_Pin */
-  GPIO_InitStruct.Pin = red_Pin|green_Pin;
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(blue1_GPIO_Port, blue1_Pin, GPIO_PIN_SET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_RESET);
+
+  /*Configure GPIO pins : red1_Pin green1_Pin PE1 */
+  GPIO_InitStruct.Pin = red1_Pin|green1_Pin|GPIO_PIN_1;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : PC6 */
-  GPIO_InitStruct.Pin = GPIO_PIN_6;
+  /*Configure GPIO pin : testing2_Pin */
+  GPIO_InitStruct.Pin = testing2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+  HAL_GPIO_Init(testing2_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : blue_Pin */
-  GPIO_InitStruct.Pin = blue_Pin;
+  /*Configure GPIO pins : testing_key_Pin key1_Pin */
+  GPIO_InitStruct.Pin = testing_key_Pin|key1_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PD12 */
+  GPIO_InitStruct.Pin = GPIO_PIN_12;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-  HAL_GPIO_Init(blue_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : blue1_Pin */
+  GPIO_InitStruct.Pin = blue1_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+  HAL_GPIO_Init(blue1_GPIO_Port, &GPIO_InitStruct);
 
 }
 

@@ -21,7 +21,7 @@ static void send_command(uint8_t *cmd, uint8_t length) {
     uint8_t checksum = calculateChecksum(cmd + 1, length - 2);
     cmd[length - 1] = checksum;
 
-    HAL_UART_Transmit(DYuart, cmd, length, HAL_MAX_DELAY);
+    HAL_UART_Transmit(DYuart, cmd, length, 1000);
 }
 
 void DY_Init(UART_HandleTypeDef *huart) {
@@ -63,8 +63,10 @@ void DY_NextTrack(void) {
 	send_command(cmd, sizeof(cmd));
 }
 
-void DY_PlayTrack(uint16_t track) {
-    // 0xAA + 0x07 + 0x02 + track_high + track_low
+void DY_PlayTrack(uint8_t track) {
+    // AA 07 02 track_high track_low checksum
+
+    // 0xAA + 0x07 + 0x02 + track_high(0x00) + track_low
     uint8_t checksum = 0xAA + 0x07 + 0x02 + 0x00 + track;
 	uint8_t cmd[] = {DY_START_BYTE, 0x07, 0x02, 0x00, track, checksum};
 	send_command(cmd, sizeof(cmd));
@@ -199,5 +201,20 @@ TimeType DY_UpdatePlayTime(void) {
 
 void DY_ClosePlayTime(void) {
 	uint8_t cmd[] = {DY_START_BYTE, 0x26, 0x00, 0xD0};
+	send_command(cmd, sizeof(cmd));
+}
+
+void DY_PlayBlankSpace(void) {
+	uint8_t cmd[] = {0xAA, 0x08, 0x0B, 0x02, 0x2F, 0x30, 0x30, 0x30, 0x30, 0x31, 0x2A, 0x4D, 0x50, 0x33, 0xD9};
+	send_command(cmd, sizeof(cmd));
+}
+
+void DY_volumeTo14(void) {
+	uint8_t cmd[] = {0xAA, 0x13, 0x01, 0x0E, 0xCC};
+	send_command(cmd, sizeof(cmd));
+}
+
+void DY_PlayAnApple(void) {
+	uint8_t cmd[] = {0xAA, 0x08, 0x0B, 0x02, 0x2F, 0x30, 0x30, 0x30, 0x30, 0x32, 0x2A, 0x4D, 0x50, 0x33, 0xDA};
 	send_command(cmd, sizeof(cmd));
 }

@@ -1,0 +1,2 @@
+../Core/Src/menu.c:12:6:printMenu	16	static
+../Core/Src/menu.c:45:6:resetAll	4	static

@@ -390,7 +390,7 @@ void LCD_DrawChar ( uint16_t usC, uint16_t usP, const char cChar )
 		for ( ucColumn = 0; ucColumn < WIDTH_EN_CHAR; ucColumn ++ )
 		{
 			if ( ucTemp & 0x01 )
-				LCD_Write_Data ( 0x001F );
+				LCD_Write_Data ( 0x0000 );
 			
 			else
 				LCD_Write_Data (  0xFFFF );								
@@ -433,94 +433,6 @@ void LCD_DrawString ( uint16_t usC, uint16_t usP, const char * pStr )
 }
 
 
-//Task 2
-void LCD_DrawDot(uint16_t usCOLUMN, uint16_t usPAGE, uint16_t usColor)	
-{	
 
-	LCD_OpenWindow (usCOLUMN, usPAGE, 1, 1 );
-	LCD_FillColor (1,usColor);
-		
-}
 
-//Task 3
-void LCD_DrawEllipse ( uint16_t usC, uint16_t usP, uint16_t SR, uint16_t LR, uint16_t usColor)
-{	
-	/*
-	 *  Task 3 : Implement LCD_DrawEllipse by using LCD_DrawDot
-	 */
-    int LL = LR * LR;
-    int SS = SR * SR;
-    int LLSS = LL * SS;
-    int x0 = SR;
-    int dx = 0;
-    int y0 = LR;
-    int dy = 0;
-
-    for (int y = 0; y <= LR; y++) {
-        int x1 = x0 - (dx - 1);  // Try slopes of dx - 1 or more
-        for (; x1 > 0; x1--) {
-            if (x1 * x1 * LL + y * y * SS <= LLSS) {
-                break;
-            }
-        }
-
-        dx = x0 - x1;  // Current approximation of the slope
-        x0 = x1;
-
-        LCD_DrawDot(usC + x0, usP - y, usColor); // Top half
-        LCD_DrawDot(usC - x0, usP - y, usColor);
-        LCD_DrawDot(usC + x0, usP + y, usColor); // Bottom half
-        LCD_DrawDot(usC - x0, usP + y, usColor);
-    }
-    for (int x = 0; x <= SR; x++) {
-        int y1 = y0 - (dy - 1);  // Try slopes of dx - 1 or more
-        for (; y1 > 0; y1--) {
-            if (y1 * y1 * SS + x * x * LL <= LLSS) {
-                break;
-            }
-        }
-
-        dy = y0 - y1;  // Current approximation of the slope
-        y0 = y1;
-
-        LCD_DrawDot(usC + x, usP - y0, usColor); // Top half
-        LCD_DrawDot(usC - x, usP - y0, usColor);
-        LCD_DrawDot(usC + x, usP + y0, usColor); // Bottom half
-        LCD_DrawDot(usC - x, usP + y0, usColor);
-    }
-}
-
-//Task 4
-void LCD_Show_Chinese (uint16_t x, uint16_t y, char num, uint16_t usColor) {
-	uint8_t temp, t1, t;
-	uint16_t y0 = y;
-	uint8_t *pfont = 0;
-	uint8_t mode = 0;
-
-	pfont = (uint8_t *)chinese_24[(unsigned char)num];
-
-	for (t = 0; t < 64; t++) {
-		temp = pfont[t];
-		for (t1 = 0; t1 < 8; t1++) { // one word 8 bits
-			if (temp & 0x80) { // exist bit
-				LCD_DrawDot(x, y, usColor);
-			}
-			else if (mode == 0) { // invalid bit
-				LCD_DrawDot(x, y, WHITE);
-			}
-
-			temp <<= 1;
-			y++;
-
-			if (y > 319){return;} //out of board
-			if ((y - y0) == 24) {
-				y = y0;
-				x++;
-				if (x > 239) {return;}
-
-				break;
-			}
-		}
-	}
-}
 

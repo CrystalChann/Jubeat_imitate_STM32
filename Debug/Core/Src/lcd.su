@@ -14,6 +14,3 @@
 ../Core/Src/lcd.c:303:6:LCD_DrawLine	64	static
 ../Core/Src/lcd.c:375:6:LCD_DrawChar	24	static
 ../Core/Src/lcd.c:409:6:LCD_DrawString	16	static
-../Core/Src/lcd.c:437:6:LCD_DrawDot	16	static
-../Core/Src/lcd.c:446:6:LCD_DrawEllipse	72	static
-../Core/Src/lcd.c:494:6:LCD_Show_Chinese	40	static

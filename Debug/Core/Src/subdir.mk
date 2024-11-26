@@ -5,9 +5,12 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../Core/Src/an_apple.c \
+../Core/Src/blank_space.c \
 ../Core/Src/dy_sv17f.c \
 ../Core/Src/lcd.c \
 ../Core/Src/main.c \
+../Core/Src/menu.c \
 ../Core/Src/stm32f1xx_hal_msp.c \
 ../Core/Src/stm32f1xx_it.c \
 ../Core/Src/syscalls.c \
@@ -16,9 +19,12 @@ C_SRCS += \
 ../Core/Src/uart.c 
 
 OBJS += \
+./Core/Src/an_apple.o \
+./Core/Src/blank_space.o \
 ./Core/Src/dy_sv17f.o \
 ./Core/Src/lcd.o \
 ./Core/Src/main.o \
+./Core/Src/menu.o \
 ./Core/Src/stm32f1xx_hal_msp.o \
 ./Core/Src/stm32f1xx_it.o \
 ./Core/Src/syscalls.o \
@@ -27,9 +33,12 @@ OBJS += \
 ./Core/Src/uart.o 
 
 C_DEPS += \
+./Core/Src/an_apple.d \
+./Core/Src/blank_space.d \
 ./Core/Src/dy_sv17f.d \
 ./Core/Src/lcd.d \
 ./Core/Src/main.d \
+./Core/Src/menu.d \
 ./Core/Src/stm32f1xx_hal_msp.d \
 ./Core/Src/stm32f1xx_it.d \
 ./Core/Src/syscalls.d \
@@ -45,7 +54,7 @@ Core/Src/%.o Core/Src/%.su: ../Core/Src/%.c Core/Src/subdir.mk
 clean: clean-Core-2f-Src
 
 clean-Core-2f-Src:
-	-$(RM) ./Core/Src/dy_sv17f.d ./Core/Src/dy_sv17f.o ./Core/Src/dy_sv17f.su ./Core/Src/lcd.d ./Core/Src/lcd.o ./Core/Src/lcd.su ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/stm32f1xx_hal_msp.d ./Core/Src/stm32f1xx_hal_msp.o ./Core/Src/stm32f1xx_hal_msp.su ./Core/Src/stm32f1xx_it.d ./Core/Src/stm32f1xx_it.o ./Core/Src/stm32f1xx_it.su ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32f1xx.d ./Core/Src/system_stm32f1xx.o ./Core/Src/system_stm32f1xx.su ./Core/Src/uart.d ./Core/Src/uart.o ./Core/Src/uart.su
+	-$(RM) ./Core/Src/an_apple.d ./Core/Src/an_apple.o ./Core/Src/an_apple.su ./Core/Src/blank_space.d ./Core/Src/blank_space.o ./Core/Src/blank_space.su ./Core/Src/dy_sv17f.d ./Core/Src/dy_sv17f.o ./Core/Src/dy_sv17f.su ./Core/Src/lcd.d ./Core/Src/lcd.o ./Core/Src/lcd.su ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/menu.d ./Core/Src/menu.o ./Core/Src/menu.su ./Core/Src/stm32f1xx_hal_msp.d ./Core/Src/stm32f1xx_hal_msp.o ./Core/Src/stm32f1xx_hal_msp.su ./Core/Src/stm32f1xx_it.d ./Core/Src/stm32f1xx_it.o ./Core/Src/stm32f1xx_it.su ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32f1xx.d ./Core/Src/system_stm32f1xx.o ./Core/Src/system_stm32f1xx.su ./Core/Src/uart.d ./Core/Src/uart.o ./Core/Src/uart.su
 
 .PHONY: clean-Core-2f-Src
 
