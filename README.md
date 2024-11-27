@@ -1,2 +1,14 @@
-this is a usable project folder by wzj.
-she is very smart.
+# STM32 Jubeat imitate
+This is a course project from ELEC3300 HKUST to imitate the arcade rhythm game "Jubeat" with STM32f103. The main contributors are Crystal Chan and Zijing.
+Used hardware:
+- DY-SV17f audio module chip for audio playing
+- 60x60 mm square button with modification of adding RGB LED inside
+- STM32103 野火
+- LCD ILI9341 for menu showcase
+
+Features include:
+- Playing music (audio)
+- Selecting songs from the menu
+- RGB LED for instruction
+- Music map
+
