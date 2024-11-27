@@ -1,0 +1,4 @@
+../Core/Src/led_blink.c:24:6:Blink_LED1	24	static
+../Core/Src/led_blink.c:63:6:Blink_LED2	24	static
+../Core/Src/led_blink.c:101:6:Blink_LED3	24	static
+../Core/Src/led_blink.c:139:6:Blink_LED4	24	static

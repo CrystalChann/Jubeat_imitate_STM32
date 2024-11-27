@@ -8,6 +8,7 @@
 #include "blank_space.h"
 #include "dy_sv17f.h"
 #include "lcd.h"
+#include "led_blink.h"
 
 void blank_space_LCD(void) {
 		  LCD_Clear(0, 0, 240, 320, WHITE);
@@ -18,10 +19,11 @@ void blank_space_LCD(void) {
 		  LCD_DrawString(100,170,"Playing");
 		  LCD_DrawString(200,200," ");
 
-
-
 }
 
 void blank_space_musicMap(void) {
-
+	Blink_LED1(0);
+	Blink_LED2(0);
+	Blink_LED3(0);
+	Blink_LED4(0);
 }
