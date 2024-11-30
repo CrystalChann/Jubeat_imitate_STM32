@@ -11,6 +11,7 @@
 #include "lcd.h"
 
 void printMenu(int track);
+void menuLED(void);
 void resetAll(void);
 
 #endif /* INC_MENU_H_ */

@@ -7,7 +7,7 @@
 
 #include "menu.h"
 #include "dy_sv17f.h"
-
+#include "led_blink.h"
 
 void printMenu(int track) {
 	  LCD_DrawString(10,25,"Welcome back to ");
@@ -29,18 +29,15 @@ void printMenu(int track) {
 	  	  case (3):
 				LCD_DrawString(15, 300, "< Selected: Bedroom Star >");
 	  }
-
-
-	  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, GPIO_PIN_RESET);//blue_key1
-	  HAL_Delay(500);
-	  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, GPIO_PIN_SET);
-	  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_6, GPIO_PIN_RESET);//green_key1
-	  HAL_Delay(500);
-	  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_6, GPIO_PIN_SET);
-	  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, GPIO_PIN_RESET); //red_key1
-	  HAL_Delay(500);
-	  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, GPIO_PIN_SET);
 }
+
+void menuLED(void) {
+	Blink_LED1(0);
+	Blink_LED2(0);
+	Blink_LED3(0);
+	Blink_LED4(0);
+}
+
 
 void resetAll(void) {
 

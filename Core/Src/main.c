@@ -23,6 +23,7 @@
 /* USER CODE BEGIN Includes */
 #include "lcd.h"
 #include "dy_sv17f.h"
+#include "led_blink.h"
 
 #include "menu.h"
 #include "blank_space.h"
@@ -36,6 +37,9 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+//#define T1_PRE 7199
+//#define T1_CNT 9999
+//#define PWM_1 4999
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -44,7 +48,9 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
- UART_HandleTypeDef huart1;
+ TIM_HandleTypeDef htim1;
+
+UART_HandleTypeDef huart1;
 
 SRAM_HandleTypeDef hsram1;
 
@@ -57,6 +63,7 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_FSMC_Init(void);
 static void MX_USART1_UART_Init(void);
+static void MX_TIM1_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -96,15 +103,14 @@ int main(void)
   MX_GPIO_Init();
   MX_FSMC_Init();
   MX_USART1_UART_Init();
+  MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
   LCD_INIT();
   HAL_UART_Init(&huart1);
   DY_Init(&huart1);
+//  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
   int page = 0;
   int menuTrue = 1;
-  uint8_t cmdPlay1[] = {0xAA, 0x08, 0x0B, 0x02, 0x2F, 0x30, 0x30, 0x30, 0x30, 0x31, 0x2A, 0x4D, 0x50, 0x33, 0xD9};
-  uint8_t cmdPlay2[] = {0xAA, 0x08, 0x0B, 0x02, 0x2F, 0x30, 0x30, 0x30, 0x30, 0x32, 0x2A, 0x4D, 0x50, 0x33, 0xDA};
-
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -118,10 +124,16 @@ int main(void)
 	  // initialize to the menu
 	  if (menuTrue == 1) {
 		  printMenu(page);
+		  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, GPIO_PIN_RESET);
+		  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_RESET);
+		  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_RESET);
+		  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET);
+		  //menuLED();
 	  }
 
-	  // changing to another page by KEY1
-	  if(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13) == GPIO_PIN_SET) {
+	  // changing to another page by KE2
+	  if(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_11) == GPIO_PIN_SET) {
+		  HAL_Delay(200);
 		  page += 1; // select another songs
 		  if( page > 3) {
 			  page = page % 4;
@@ -133,30 +145,54 @@ int main(void)
 		  // page = 2 an apple
 		  // page = 3 badroom star
 	  }
+	  //change to last page by key1
+	  if(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_10) != GPIO_PIN_SET) {
+	  		  HAL_Delay(200);
+	  		  page -= 1; // select another songs
+	  		  if( page <= 0) {
+	  			  page = 3;
+	  		  }
+	  }
 
 
 	  // select the song by KEY1 in STM32
 	  if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_SET) {
 		  menuTrue = 0;
+		  uint8_t cmdPlay1[] = {0xAA, 0x08, 0x0B, 0x02, 0x2F, 0x30, 0x30, 0x30, 0x30, 0x31, 0x2A, 0x4D, 0x50, 0x33, 0xD9};
+		  uint8_t cmdPlay2[] = {0xAA, 0x08, 0x0B, 0x02, 0x2F, 0x30, 0x30, 0x30, 0x30, 0x32, 0x2A, 0x4D, 0x50, 0x33, 0xDA};
+		  uint8_t cmdPlay3[] = {0xAA, 0x08, 0x0B, 0x02, 0x2F, 0x30, 0x30, 0x30, 0x30, 0x33, 0x2A, 0x4D, 0x50, 0x33, 0xDB};
+
 		  HAL_Delay(50);
 		  switch (page) {
 		  	  case (0) :
-		  	  	  	HAL_UART_Transmit(&huart1, cmdPlay1, sizeof(cmdPlay1), 1000);
-		  	  	  	HAL_Delay(50);
 		  	  	  	blank_space_LCD();
+		  	  	  	HAL_Delay(500);
+		  	  	  	HAL_UART_Transmit(&huart1, cmdPlay1, sizeof(cmdPlay1), 1000);
+		  		    blank_space_musicMap();
 		  	  	  	break;
 		  	  case (1) :
-		  	  	  	HAL_UART_Transmit(&huart1, cmdPlay1, sizeof(cmdPlay1), 1000);
-		  	  	  	HAL_Delay(50);
 		  	  	  	blank_space_LCD();
+		  	  	  	HAL_Delay(500);
+		  	  	  	HAL_UART_Transmit(&huart1, cmdPlay1, sizeof(cmdPlay1), 1000);
+		  		    blank_space_musicMap();
 		  	  	  	break;
 		  	  case (2) :
-					HAL_UART_Transmit(&huart1, cmdPlay2, sizeof(cmdPlay2), 1000);
-		  	  	  	HAL_Delay(50);
 					an_apple_LCD();
+		  	  	  	HAL_Delay(500);
+		  	  	  	HAL_UART_Transmit(&huart1, cmdPlay2, sizeof(cmdPlay2), 1000);
+		  	  	  	an_apple_musicMap();
+		  	  	  	break;
+		  	  case (3) :
+		  			// haven't write music map
+		  	  	  	HAL_Delay(500);
+		  	  	  	HAL_UART_Transmit(&huart1, cmdPlay2, sizeof(cmdPlay3), 1000);
 		  	  	  	break;
 
 		  }
+	  }
+
+	  if(HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_2) != GPIO_PIN_SET) {
+		  //Blink_LED4(0);
 	  }
 
   }
@@ -201,6 +237,71 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+}
+
+/**
+  * @brief TIM1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM1_Init(void)
+{
+
+  /* USER CODE BEGIN TIM1_Init 0 */
+
+  /* USER CODE END TIM1_Init 0 */
+
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+  TIM_OC_InitTypeDef sConfigOC = {0};
+  TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig = {0};
+
+  /* USER CODE BEGIN TIM1_Init 1 */
+
+  /* USER CODE END TIM1_Init 1 */
+  htim1.Instance = TIM1;
+  htim1.Init.Prescaler = T1_PRE;
+  htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim1.Init.Period = T1_CNT;
+  htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim1.Init.RepetitionCounter = 0;
+  htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_PWM_Init(&htim1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sConfigOC.OCMode = TIM_OCMODE_PWM1;
+  sConfigOC.Pulse = PWM_1;
+  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+  sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
+  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+  sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
+  sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
+  if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sBreakDeadTimeConfig.OffStateRunMode = TIM_OSSR_DISABLE;
+  sBreakDeadTimeConfig.OffStateIDLEMode = TIM_OSSI_DISABLE;
+  sBreakDeadTimeConfig.LockLevel = TIM_LOCKLEVEL_OFF;
+  sBreakDeadTimeConfig.DeadTime = 0;
+  sBreakDeadTimeConfig.BreakState = TIM_BREAK_DISABLE;
+  sBreakDeadTimeConfig.BreakPolarity = TIM_BREAKPOLARITY_HIGH;
+  sBreakDeadTimeConfig.AutomaticOutput = TIM_AUTOMATICOUTPUT_DISABLE;
+  if (HAL_TIMEx_ConfigBreakDeadTime(&htim1, &sBreakDeadTimeConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM1_Init 2 */
+
+  /* USER CODE END TIM1_Init 2 */
+  HAL_TIM_MspPostInit(&htim1);
+
 }
 
 /**
@@ -249,16 +350,18 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOE, red1_Pin|green1_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, green4_Pin|red4_Pin|green3_Pin|red3_Pin
+                          |green2_Pin|red2_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(blue1_GPIO_Port, blue1_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_RESET);
@@ -270,17 +373,26 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : testing2_Pin */
-  GPIO_InitStruct.Pin = testing2_Pin;
+  /*Configure GPIO pins : testing2_Pin key2_Pin key3_Pin */
+  GPIO_InitStruct.Pin = testing2_Pin|key2_Pin|key3_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(testing2_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pins : testing_key_Pin key1_Pin */
   GPIO_InitStruct.Pin = testing_key_Pin|key1_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : green4_Pin red4_Pin green3_Pin red3_Pin
+                           green2_Pin red2_Pin */
+  GPIO_InitStruct.Pin = green4_Pin|red4_Pin|green3_Pin|red3_Pin
+                          |green2_Pin|red2_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pin : PD12 */
   GPIO_InitStruct.Pin = GPIO_PIN_12;
@@ -289,12 +401,11 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : blue1_Pin */
-  GPIO_InitStruct.Pin = blue1_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-  HAL_GPIO_Init(blue1_GPIO_Port, &GPIO_InitStruct);
+  /*Configure GPIO pin : key4_Pin */
+  GPIO_InitStruct.Pin = key4_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(key4_GPIO_Port, &GPIO_InitStruct);
 
 }
 
