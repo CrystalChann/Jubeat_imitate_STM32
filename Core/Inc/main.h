@@ -80,12 +80,12 @@ void Error_Handler(void);
 #define green3_GPIO_Port GPIOB
 #define red3_Pin GPIO_PIN_15
 #define red3_GPIO_Port GPIOB
+#define key2_Pin GPIO_PIN_11
+#define key2_GPIO_Port GPIOC
 #define key3_Pin GPIO_PIN_12
 #define key3_GPIO_Port GPIOC
 #define key4_Pin GPIO_PIN_2
 #define key4_GPIO_Port GPIOD
-#define key2_Pin GPIO_PIN_5
-#define key2_GPIO_Port GPIOB
 #define green2_Pin GPIO_PIN_6
 #define green2_GPIO_Port GPIOB
 #define red2_Pin GPIO_PIN_7

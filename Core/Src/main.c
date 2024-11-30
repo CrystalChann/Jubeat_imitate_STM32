@@ -124,12 +124,16 @@ int main(void)
 	  // initialize to the menu
 	  if (menuTrue == 1) {
 		  printMenu(page);
-		  blank_space_musicMap();
+		  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, GPIO_PIN_RESET);
+		  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_RESET);
+		  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_RESET);
+		  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET);
+		  //menuLED();
 	  }
 
-	  // changing to another page by KEY1
-	  if(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13) == GPIO_PIN_SET) {
-		  HAL_Delay(50);
+	  // changing to another page by KE2
+	  if(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_11) == GPIO_PIN_SET) {
+		  HAL_Delay(200);
 		  page += 1; // select another songs
 		  if( page > 3) {
 			  page = page % 4;
@@ -141,6 +145,14 @@ int main(void)
 		  // page = 2 an apple
 		  // page = 3 badroom star
 	  }
+	  //change to last page by key1
+	  if(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_10) != GPIO_PIN_SET) {
+	  		  HAL_Delay(200);
+	  		  page -= 1; // select another songs
+	  		  if( page <= 0) {
+	  			  page = 3;
+	  		  }
+	  }
 
 
 	  // select the song by KEY1 in STM32
@@ -148,6 +160,7 @@ int main(void)
 		  menuTrue = 0;
 		  uint8_t cmdPlay1[] = {0xAA, 0x08, 0x0B, 0x02, 0x2F, 0x30, 0x30, 0x30, 0x30, 0x31, 0x2A, 0x4D, 0x50, 0x33, 0xD9};
 		  uint8_t cmdPlay2[] = {0xAA, 0x08, 0x0B, 0x02, 0x2F, 0x30, 0x30, 0x30, 0x30, 0x32, 0x2A, 0x4D, 0x50, 0x33, 0xDA};
+		  uint8_t cmdPlay3[] = {0xAA, 0x08, 0x0B, 0x02, 0x2F, 0x30, 0x30, 0x30, 0x30, 0x33, 0x2A, 0x4D, 0x50, 0x33, 0xDB};
 
 		  HAL_Delay(50);
 		  switch (page) {
@@ -155,21 +168,31 @@ int main(void)
 		  	  	  	blank_space_LCD();
 		  	  	  	HAL_Delay(500);
 		  	  	  	HAL_UART_Transmit(&huart1, cmdPlay1, sizeof(cmdPlay1), 1000);
-		  	  	  	blank_space_musicMap();
+		  		    blank_space_musicMap();
 		  	  	  	break;
 		  	  case (1) :
 		  	  	  	blank_space_LCD();
 		  	  	  	HAL_Delay(500);
 		  	  	  	HAL_UART_Transmit(&huart1, cmdPlay1, sizeof(cmdPlay1), 1000);
-		  	  	  	blank_space_musicMap();
+		  		    blank_space_musicMap();
 		  	  	  	break;
 		  	  case (2) :
 					an_apple_LCD();
 		  	  	  	HAL_Delay(500);
 		  	  	  	HAL_UART_Transmit(&huart1, cmdPlay2, sizeof(cmdPlay2), 1000);
+		  	  	  	an_apple_musicMap();
+		  	  	  	break;
+		  	  case (3) :
+		  			// haven't write music map
+		  	  	  	HAL_Delay(500);
+		  	  	  	HAL_UART_Transmit(&huart1, cmdPlay2, sizeof(cmdPlay3), 1000);
 		  	  	  	break;
 
 		  }
+	  }
+
+	  if(HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_2) != GPIO_PIN_SET) {
+		  //Blink_LED4(0);
 	  }
 
   }
@@ -350,8 +373,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : testing2_Pin key3_Pin */
-  GPIO_InitStruct.Pin = testing2_Pin|key3_Pin;
+  /*Configure GPIO pins : testing2_Pin key2_Pin key3_Pin */
+  GPIO_InitStruct.Pin = testing2_Pin|key2_Pin|key3_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
@@ -383,12 +406,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(key4_GPIO_Port, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : key2_Pin */
-  GPIO_InitStruct.Pin = key2_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(key2_GPIO_Port, &GPIO_InitStruct);
 
 }
 

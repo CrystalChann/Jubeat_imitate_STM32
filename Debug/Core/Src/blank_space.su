@@ -1,2 +1,2 @@
-../Core/Src/blank_space.c:13:6:blank_space_LCD	16	static
-../Core/Src/blank_space.c:24:6:blank_space_musicMap	8	static
+../Core/Src/blank_space.c:17:6:blank_space_LCD	16	static
+../Core/Src/blank_space.c:27:6:blank_space_musicMap	16	static
