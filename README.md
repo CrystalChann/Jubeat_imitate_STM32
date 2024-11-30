@@ -19,4 +19,7 @@ This is a course project from ELEC3300 HKUST to imitate the arcade rhythm game "
 
 # Final product image:
 
-![image] 5photo1.jpg
+![5photo1](https://github.com/user-attachments/assets/7749c34a-5140-4331-8a28-881644640502)
+
+![5photo2](https://github.com/user-attachments/assets/447b285f-7160-4d25-9180-c00452fb885f)
+
