@@ -1,7 +1,7 @@
 # STM32 Jubeat imitate
 
-This is a course project from ELEC3300 HKUST to imitate the arcade rhythm game "Jubeat" with STM32f103. The main contributors are Crystal Chan and Zijing. Used hardware:
-
+This is a course project from ELEC3300 HKUST to imitate the arcade rhythm game "Jubeat" with STM32f103. The main contributors are Crystal Chan and Zijing.
+Used hardware:
 - DY-SV17f audio module chip for audio playing
 - 60x60 mm square button with modification of adding RGB LED inside
 - STM32103 野火
